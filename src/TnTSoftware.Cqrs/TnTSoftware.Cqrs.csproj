@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Thomas Anderson</Authors>
+    <Company>TnT Software Ltd</Company>
+    <!-- The version is set by the Jenkins pipeline -->
+    <Version>0.0.1</Version>
+    <RootNamespace>TnTSoftware.Cqrs</RootNamespace>
+    <AssemblyName>TnTSoftware.Cqrs</AssemblyName>
+    <Description>Simple Command/Query framework underpinned by MediatR</Description>
+    <RepositoryUrl>https://github.com/t11omas/TnTSoftware.CQRS</RepositoryUrl>
+    <PackageTags>CQRS</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <CodeAnalysisRuleSet>$(SolutionDir)\StyleCop.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <CodeAnalysisRuleSet>$(SolutionDir)\StyleCop.ruleset</CodeAnalysisRuleSet>
+    <DefineConstants>TRACE;NETCOREAPP;NETCOREAPP2_1</DefineConstants>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="7.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.0.1" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

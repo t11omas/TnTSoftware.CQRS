@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Thomas Anderson</Authors>
+    <Company>TnT Software Ltd</Company>
+    <!-- The version is set by the Jenkins pipeline -->
+    <Version>0.0.1</Version>
+    <AssemblyName>TnTSoftware.Cqrs.AspNetCore</AssemblyName>
+    <Description>Simple Command/Query base controller</Description>
+    <RepositoryUrl>https://github.com/t11omas/TnTSoftware.CQRS</RepositoryUrl>
+    <PackageTags>CQRS</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <CodeAnalysisRuleSet>$(SolutionDir)\StyleCop.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <CodeAnalysisRuleSet>$(SolutionDir)\StyleCop.ruleset</CodeAnalysisRuleSet>
+    <DefineConstants>TRACE;NETCOREAPP;NETCOREAPP2_1</DefineConstants>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="TnTSoftware.Cqrs" Version="0.0.1" />
+  </ItemGroup>
+
+</Project>
