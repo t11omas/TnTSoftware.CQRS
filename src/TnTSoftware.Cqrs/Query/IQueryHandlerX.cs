@@ -1,65 +1,19 @@
 ﻿namespace TnTSoftware.Cqrs.Query
 {
+    using TnT.Cqrs.Core;
+
     public static class IQueryHandlerX
     {
-        public static ExecutionResponse Ok<TQuery, TResult>(this IQueryHandler<TQuery> handler, TResult content)
+        public static ExecutionResult Ok<TQuery, TUser, TResult>(this IQueryHandler<TQuery, TUser> handler, TResult content)
            where TQuery : IQuery
         {
-            return ExecutionResponse.Create(content, ActionOutcome.Ok, null);
+            return ExecutionResult.Create(content, ActionOutcome.Ok);
         }
 
-        public static ExecutionResponse Ok<TQuery>(this IQueryHandler<TQuery> handler)
+        public static ExecutionResult NotFound<TQuery, TUser>(this IQueryHandler<TQuery, TUser> handler)
             where TQuery : IQuery
         {
-            return ExecutionResponse.Ok;
-        }
-
-        public static ExecutionResponse Conflict<TQuery>(this IQueryHandler<TQuery> handler)
-           where TQuery : IQuery
-        {
-            return ExecutionResponse.Conflict;
-        }
-
-        public static ExecutionResponse Conflict<TQuery, TResult>(this IQueryHandler<TQuery> handler, TResult content)
-            where TQuery : IQuery
-        {
-            return ExecutionResponse.Create(content, ActionOutcome.Conflict, null);
-        }
-
-        public static ExecutionResponse Forbidden<TQuery>(this IQueryHandler<TQuery> handler)
-            where TQuery : IQuery
-        {
-            return ExecutionResponse.Forbidden;
-        }
-
-        public static ExecutionResponse Forbidden<TQuery, TResult>(this IQueryHandler<TQuery> handler, TResult content)
-            where TQuery : IQuery
-        {
-            return ExecutionResponse.Create(content, ActionOutcome.Forbidden, null);
-        }
-
-        public static ExecutionResponse BadRequest<TQuery>(this IQueryHandler<TQuery> handler)
-            where TQuery : IQuery
-        {
-            return ExecutionResponse.BadRequest;
-        }
-
-        public static ExecutionResponse BadRequest<TQuery, TResult>(this IQueryHandler<TQuery> handler, TResult content)
-            where TQuery : IQuery
-        {
-            return ExecutionResponse.Create(content, ActionOutcome.BadRequest, null);
-        }
-
-        public static ExecutionResponse UnknownError<TQuery>(this IQueryHandler<TQuery> handler)
-            where TQuery : IQuery
-        {
-            return ExecutionResponse.UnknownError;
-        }
-
-        public static ExecutionResponse UnknownError<TQuery, TResult>(this IQueryHandler<TQuery> handler, TResult content)
-            where TQuery : IQuery
-        {
-            return ExecutionResponse.Create(content, ActionOutcome.UnknownError, null);
+            return ExecutionResult.NotFound;
         }
     }
 }

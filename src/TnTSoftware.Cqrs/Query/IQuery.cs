@@ -1,6 +1,8 @@
 ﻿namespace TnTSoftware.Cqrs.Query
 {
-    public interface IQuery
+    using TnT.Cqrs.Core;
+
+    public interface IQuery : IMessage
     {
     }
 }

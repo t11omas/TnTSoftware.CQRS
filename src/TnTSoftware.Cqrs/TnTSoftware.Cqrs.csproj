@@ -5,11 +5,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Thomas Anderson</Authors>
     <Company>TnT Software Ltd</Company>
-    <!-- The version is set by the Jenkins pipeline -->
     <Version>0.0.1</Version>
     <RootNamespace>TnTSoftware.Cqrs</RootNamespace>
     <AssemblyName>TnTSoftware.Cqrs</AssemblyName>
-    <Description>Simple Command/Query framework underpinned by MediatR</Description>
+    <Description>Simple Command/Query framework</Description>
     <RepositoryUrl>https://github.com/t11omas/TnTSoftware.CQRS</RepositoryUrl>
     <PackageTags>CQRS</PackageTags>
   </PropertyGroup>
@@ -25,9 +24,8 @@
 
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="7.0.0" />
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.3" />
+    <PackageReference Include="Scrutor" Version="3.2.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

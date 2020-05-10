@@ -2,10 +2,11 @@ namespace TnTSoftware.Cqrs.Tests
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Command;
-    using MediatR;
 
-    public class TestCommandHandler : ICommandHandler<TestCommand>
+    using TnT.Cqrs.Core;
+    using TnT.Cqrs.Core.Command;
+
+    public class TestCommandHandler : ICommandHandler<TestCommand, TestUser>
     {
         public string SettableValue { get; }
 
@@ -13,8 +14,8 @@ namespace TnTSoftware.Cqrs.Tests
         {
             SettableValue = settableValue;
         }
-        
-        public Task<ExecutionResponse> Handle(CommandContext<TestCommand> request, CancellationToken cancellationToken, RequestHandlerDelegate<ExecutionResponse> next)
+
+        public Task<ExecutionResult> Execute(TestCommand command, TestUser user)
         {
             throw new System.NotImplementedException();
         }
@@ -23,5 +24,10 @@ namespace TnTSoftware.Cqrs.Tests
     public class TestCommand : ICommand
     {
         public string TestProp { get; set; }
+    }
+
+    public class TestUser
+    {
+        public string Name { get; set; }
     }
 }

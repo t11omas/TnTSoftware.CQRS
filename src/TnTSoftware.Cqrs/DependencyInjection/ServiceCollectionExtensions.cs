@@ -1,78 +1,43 @@
 ﻿namespace TnTSoftware.Cqrs.DependencyInjection
 {
     using System;
-    using System.Reflection;
-    using MediatR;
     using Microsoft.Extensions.DependencyInjection;
-    using TnTSoftware.Cqrs.Command;
-    using TnTSoftware.Cqrs.Pipeline;
+
+    using TnT.Cqrs.Core;
+    using TnT.Cqrs.Core.Command;
+    using TnT.Cqrs.Core.DependencyInjection;
+    using TnT.Cqrs.Core.ServiceFactory;
     using TnTSoftware.Cqrs.Query;
 
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddTnTSoftwareCqrs(this IServiceCollection services)
+        public static IServiceCollection AddTnTSoftwareCqrs(this IServiceCollection services, Action<TnTCqrsBuilderOptions> configure = default)
         {
-            services.AddTnTSoftwareCqrs(Assembly.GetCallingAssembly());
+            services.AddSingleton<ServiceFactory>(p => p.GetService);
+            services.AddSingleton<ICommandExecutor, CommandExecutor>();
+            services.AddSingleton<IQueryExecutor, QueryExecutor>();
+            services.Scan(scan => scan
+                .FromApplicationDependencies()
+                .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<,>)))
+                .AsImplementedInterfaces()
+                .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<,>)))
+                .AsImplementedInterfaces());
+            TnTCqrsBuilderOptions options = new TnTCqrsBuilderOptions(services);
 
-            // This override the default Mediar behaviour which catches argument exceptions and tries to create the pipeline via reflections.  This
-            // doesn't work for us, and just results in exceptions being swallowed, which takes too much effort to track down
-            services.AddScoped<ServiceFactory>(p => p.GetService);
-            services.AddScoped<ICommandInvoker, CommandInvoker>();
-            services.AddScoped<IQueryInvoker, QueryInvoker>();
-            return services;
-        }
+            configure?.Invoke(options);
 
-        public static IServiceCollection AddTnTSoftwareCqrs(this IServiceCollection services, params Assembly[] assemblies)
-        {
-            services.AddMediatR(c => c.AsScoped(), assemblies);
+            services.AddScoped(typeof(PipelineStepExecutor<,>), options.PipelineStepExecutor);
 
-            // This override the default Mediar behaviour which catches argument exceptions and tries to create the pipeline via reflections.  This
-            // doesn't work for us, and just results in exceptions being swallowed, which takes too much effort to track down
-            services.AddScoped<ServiceFactory>(p => p.GetService);
-            services.AddScoped<ICommandInvoker, CommandInvoker>();
-            services.AddScoped<IQueryInvoker, QueryInvoker>();
-            return services;
-        }
+            foreach (var optionsPipelineStep in options.CommandOptions.PipelineSteps)
+            {
+                services.AddScoped(typeof(IPipelineStep<,>), optionsPipelineStep.Item);
+            }
 
-        public static IServiceCollection AddLoggingPipeline(this IServiceCollection services)
-        {
-            services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(LoggingCommandHandler<,>));
-            return services;
-        }
+            foreach (var optionsPipelineStep in options.QueryOptions.PipelineSteps)
+            {
+                services.AddScoped(typeof(IPipelineStep<,>), optionsPipelineStep.Item);
+            }
 
-        public static IServiceCollection AddCommandHandler<TCommand, THandler>(this IServiceCollection services)
-            where TCommand : ICommand
-            where THandler : class, IPipelineBehavior<CommandContext<TCommand>, ExecutionResponse>
-        {
-            services.AddScoped<IPipelineBehavior<CommandContext<TCommand>, ExecutionResponse>, THandler>();
-            return services;
-        }
-
-        public static IServiceCollection AddCommandHandler<TCommand, THandler>(
-            this IServiceCollection services,
-            Func<IServiceProvider, THandler> implementationFactory)
-            where TCommand : ICommand
-            where THandler : class, IPipelineBehavior<CommandContext<TCommand>, ExecutionResponse>
-        {
-            services.AddScoped<IPipelineBehavior<CommandContext<TCommand>, ExecutionResponse>>(implementationFactory);
-            return services;
-        }
-
-        public static IServiceCollection AddQueryHandler<TQuery, THandler>(this IServiceCollection services)
-            where TQuery : IQuery
-            where THandler : class, IPipelineBehavior<QueryContext<TQuery>, ExecutionResponse>
-        {
-            services.AddScoped<IPipelineBehavior<QueryContext<TQuery>, ExecutionResponse>, THandler>();
-            return services;
-        }
-
-        public static IServiceCollection AddQueryHandler<TQuery, THandler>(
-            this IServiceCollection services,
-            Func<IServiceProvider, THandler> implementationFactory)
-            where TQuery : IQuery
-            where THandler : class, IPipelineBehavior<QueryContext<TQuery>, ExecutionResponse>
-        {
-            services.AddScoped<IPipelineBehavior<QueryContext<TQuery>, ExecutionResponse>, THandler>(implementationFactory);
             return services;
         }
     }

@@ -1,9 +1,12 @@
-﻿namespace TnTSoftware.Cqrs.Command
+﻿namespace TnT.Cqrs.Core.Command
 {
-    using MediatR;
+    using System.Threading.Tasks;
 
-    public interface ICommandHandler<TCommand> : IPipelineBehavior<CommandContext<TCommand>, ExecutionResponse>
+    using TnTSoftware.Cqrs;
+
+    public interface ICommandHandler<in TCommand, in TUser>
         where TCommand : ICommand
     {
+        Task<ExecutionResult> Execute(TCommand command, TUser user);
     }
 }

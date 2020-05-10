@@ -1,6 +1,8 @@
-﻿namespace TnTSoftware.Cqrs.Command
+﻿namespace TnT.Cqrs.Core
 {
-    public interface ICommand
+    using TnTSoftware.Cqrs;
+
+    public interface ICommand : IMessage
     {
     }
 }

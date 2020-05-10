@@ -1,9 +1,12 @@
 ﻿namespace TnTSoftware.Cqrs.Query
 {
-    using MediatR;
+    using System.Threading.Tasks;
 
-    public interface IQueryHandler<TQuery> : IPipelineBehavior<QueryContext<TQuery>, ExecutionResponse>
+    using TnT.Cqrs.Core;
+
+    public interface IQueryHandler<in TQuery, in TUser>
         where TQuery : IQuery
     {
+        Task<ExecutionResult> Execute(TQuery query, TUser user);
     }
 }
